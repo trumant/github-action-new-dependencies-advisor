@@ -3,6 +3,7 @@ import {compact} from 'lodash/fp'
 import packageJson, {FullMetadata} from 'package-json'
 import {COMMENT_IDENTIFIER} from '../../config/comment'
 import {DependenciesList} from '../../types/package'
+import {getAdvisorPackageScore} from './advisorPackageMetadata'
 
 async function draftMessage(
   newDependencies: DependenciesList
@@ -13,11 +14,13 @@ async function draftMessage(
     ...newDependencies.devDependencies
   ]
 
-  // // fetch information for all dependencies to render
+  // fetch information for all dependencies to render
   const info: Record<string, FullMetadata> = {}
+  const advisorScorePicture: Record<string, string> = {}
   for (const dependency of listDependencies) {
     try {
       info[dependency] = await packageJson(dependency, {fullMetadata: true})
+      advisorScorePicture[dependency] = await getAdvisorPackageScore(dependency)
     } catch (error) {
       debug(`Package not found: ${dependency}`)
     }
@@ -64,6 +67,15 @@ async function draftMessage(
       ? `<tr><td>Last modified</td><td>${info[dep].time.modified}</td></tr>`
       : ``
   }
+  ${
+    advisorScorePicture[dep]
+      ? `<tr><td>Snyk Advisor Score</td><td><a href="https://snyk.io/advisor/npm-package/${encodeURIComponent(
+          dep
+        )}"><img height="150px" src="${
+          advisorScorePicture[dep]
+        }" /></a></td></tr>`
+      : ``
+  }
 </table>
 ${
   info[dep].readme
@@ -73,12 +85,12 @@ ${
     `
 
   const dependenciesMessage = `
-## Dependencies added
+## New dependencies
 ${newDependencies.dependencies.map(messageInfo).join(`\n`)}
 `
 
   const devDependenciesMessage = `
-## Development dependencies added
+## New devDevelopment
 ${newDependencies.devDependencies.map(messageInfo).join(`\n`)}
 `
 
