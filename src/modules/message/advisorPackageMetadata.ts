@@ -14,11 +14,11 @@ async function getAdvisorPackagePage(packageName: string): Promise<string> {
       res.setEncoding('utf8')
       let data: any = []
       res.on('data', chunk => {
-        data.push(chunk)
+        data.push(Buffer.from(chunk))
       })
 
       res.on('end', () => {
-        const bodyHTML: string = Buffer.concat(data).toString('utf-8')
+        const bodyHTML: string = Buffer.concat(data).toString('utf8')
         resolve(bodyHTML)
       })
     })
