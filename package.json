@@ -1,8 +1,8 @@
 {
-  "name": "new-dependencies-action",
-  "version": "1.0.1",
+  "name": "github-action-new-dependencies-alerts",
+  "version": "1.0.2",
   "private": true,
-  "description": "GitHub Action adding a comment with information about new NPM dependencies detected in a pull request",
+  "description": "GitHub Action adding a comment with information about new npm dependencies detected in a pull request",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
