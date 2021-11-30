@@ -37,7 +37,7 @@ export async function getAdvisorPackageScore(
   const pageBody: string = await getAdvisorPackagePage(packageName)
 
   const dom = new JSDOM(pageBody)
-  for (const tag of dom.window.document.getElementsByTagName('meta')) {
+  for (const tag of dom?.window?.document?.getElementsByTagName('meta')) {
     if (tag.getAttribute('property') === 'og:image') {
       return String(tag.getAttribute('content'))
     }

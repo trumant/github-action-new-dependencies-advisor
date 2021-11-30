@@ -5,6 +5,10 @@ import {COMMENT_IDENTIFIER} from '../../config/comment'
 import {DependenciesList} from '../../types/package'
 import {getAdvisorPackageScore} from './advisorPackageMetadata'
 
+interface advisorScorePictures {
+  [index: string]: string
+}
+
 async function draftMessage(
   newDependencies: DependenciesList
 ): Promise<string> {
@@ -16,7 +20,7 @@ async function draftMessage(
 
   // fetch information for all dependencies to render
   const info: Record<string, FullMetadata> = {}
-  const advisorScorePicture: Record<string, string> = {}
+  const advisorScorePicture: advisorScorePictures = {}
   for (const dependency of listDependencies) {
     try {
       info[dependency] = await packageJson(dependency, {fullMetadata: true})
