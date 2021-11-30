@@ -1,4 +1,4 @@
-# Highlight new NPM dependencies in Pull Requests
+# Alert when new npm dependencies added to a project
 
 In Pull Requests, this action highlight the addition of new NPM dependencies in
 one of the `package.json` of your repository.
@@ -23,16 +23,19 @@ This _GitHub Action_ should run everytime a commit is pushed to the pull request
 to check any potential addition or change in one of your `package.json`.
 
 ```yml
-name: Inspect dependencies
+name: "Deps: show dependencies metadata"
 on:
   - pull_request
 
 jobs:
-  check_new_dependencies:
+  dpes_check_new_dependencies:
     runs-on: ubuntu-latest
     steps:
-      - name: Check for new dependencies
-        uses: hiwelo/new-dependencies-action@1.0.1
+      - name: "Checkout repo for a local instance"
+        uses: actions/checkout@v2
+        
+      - name: "Deps: show dependencies metadata"
+        uses: lirantal/new-dependencies-action@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
