@@ -75,9 +75,7 @@ async function draftMessage(
     advisorScorePicture[dep]
       ? `<tr><td>Snyk Advisor Score</td><td><a href="https://snyk.io/advisor/npm-package/${encodeURIComponent(
           dep
-        )}"><img height="150px" src="${
-          advisorScorePicture[dep]
-        }" /></a></td></tr>`
+        )}"><img src="${advisorScorePicture[dep]}" /></a></td></tr>`
       : ``
   }
 </table>
