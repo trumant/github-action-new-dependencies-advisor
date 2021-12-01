@@ -1,8 +1,10 @@
-# Alert when new npm dependencies added to a project
+# New Dependencies Advisor
 
-This GitHub Action will add rich metadata about new packages when they are added in Pull Requests in the form of a comment.
+GitHub Action adding comments to pull requests with package health information about newly added npm dependencies
 
-![Add a comment in a Pull Request informing of newly added dependencies](https://raw.githubusercontent.com/lirantal/github-action-new-dependencies-alerts/main/.github/new-dependencies-alerts-screenshot.png)
+See it in action 👇
+
+![Add a comment in a Pull Request informing of newly added dependencies](https://raw.githubusercontent.com/lirantal/github-action-new-dependencies-advisor/main/.github/new-dependencies-alerts-screenshot.png)
 
 ## Why?
 
@@ -28,7 +30,7 @@ Specify the built-in secrets available to Actions via the `token` input. Here's 
 
 ```yml
       - name: "Deps: show dependencies metadata"
-        uses: lirantal/new-dependencies-action@v1.1.0
+        uses: lirantal/github-action-new-dependencies-advisor@v1.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -38,23 +40,23 @@ Not required.
 
 ## Usage
 
-This _GitHub Action_ should run everytime a commit is pushed to the pull request
+This _GitHub Action_ should run every time a commit is pushed to the pull request
 to check any potential addition or change in one of your `package.json`.
 
 ```yml
-name: "Deps: show dependencies metadata"
+name: "Deps: show new dependencies metadata"
 on:
   - pull_request
 
 jobs:
-  dpes_check_new_dependencies:
+  deps_new_dependencies_advisor:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout repo for a local instance"
         uses: actions/checkout@v2
         
-      - name: "Deps: show dependencies metadata"
-        uses: lirantal/new-dependencies-action@v1.1.0
+      - name: "Deps: show new dependencies metadata"
+        uses: lirantal/github-action-new-dependencies-advisor@v1.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 

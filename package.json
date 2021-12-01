@@ -1,8 +1,8 @@
 {
-  "name": "github-action-new-dependencies-alerts",
-  "version": "1.0.2",
+  "name": "github-action-new-dependencies-advisor",
+  "version": "1.1.0",
   "private": true,
-  "description": "GitHub Action adding a comment with information about new npm dependencies detected in a pull request",
+  "description": "GitHub Action adding comments to pull requests with package health information about newly added npm dependencies",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -15,14 +15,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hiwelo/new-dependencies-action.git"
+    "url": "git+https://github.com/lirantal/github-action-new-dependencies-advisor.git"
   },
   "keywords": [
     "actions",
     "node",
     "setup"
   ],
-  "author": "Damien Senger <hello@raccoon.studio>",
+  "author": {
+    "name": "Liran Tal",
+    "email": "liran.tal@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "Damien Senger",
+      "email": "hello@raccoon.studio"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.6",
