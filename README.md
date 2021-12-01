@@ -67,4 +67,5 @@ This project is released under the MIT License.
 ## Author
 
 Damien Senger <hello@raccoon.studio>
+
 Liran Tal <liran.tal@gmail.com>
