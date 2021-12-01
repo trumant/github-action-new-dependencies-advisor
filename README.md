@@ -30,7 +30,7 @@ Specify the built-in secrets available to Actions via the `token` input. Here's 
 
 ```yml
       - name: "Deps: show dependencies metadata"
-        uses: lirantal/github-action-new-dependencies-advisor@v1.1.0
+        uses: lirantal/github-action-new-dependencies-advisor@v1.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -56,7 +56,7 @@ jobs:
         uses: actions/checkout@v2
         
       - name: "Deps: show new dependencies metadata"
-        uses: lirantal/github-action-new-dependencies-advisor@v1.1.0
+        uses: lirantal/github-action-new-dependencies-advisor@v1.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
