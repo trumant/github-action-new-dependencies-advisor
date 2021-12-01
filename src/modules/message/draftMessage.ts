@@ -34,7 +34,11 @@ async function draftMessage(
     `
 ### ${
       info[dep].homepage
-        ? `[${info[dep].name}](${info[dep].homepage})`
+        ? `[${
+            info[dep].name
+          }](https://snyk.io/advisor/npm-package/${encodeURIComponent(
+            info[dep].name
+          )})`
         : info[dep].name
     }\n
 
