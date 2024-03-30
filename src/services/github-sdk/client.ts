@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/explicit-member-accessibility */
 import {getInput} from '@actions/core'
-import {GitHub, context} from '@actions/github'
+import {context, getOctokit} from '@actions/github'
 import _ from 'underscore'
 import {Package} from '../../types/package'
 import {COMMENT_IDENTIFIER} from '../../config/comment'
@@ -13,18 +13,17 @@ class GitHubClient {
   /** Repository to target when using this API */
   public readonly repo: string
   /** Hydrated Octokit client */
-  private octokit: GitHub
+  private octokit: any
   /** Hydrated base branch */
-  private baseBranch?: string
+  private baseBranch: string
   /** Hydrated id of the message created by this action */
   private messageId?: number | false
   /** Hydrated instance of this client */
   private static hydratedInstance?: GitHubClient = undefined
-
   constructor() {
     /** Hydrates the Octokit client with the provided token */
-    this.octokit = new GitHub(getInput('token'))
-
+    this.octokit = getOctokit(getInput('token'))
+    this.baseBranch = ''
     /** Initializes the context information */
     const {number} = context.issue
     const {owner, repo} = context.repo
@@ -42,7 +41,7 @@ class GitHubClient {
   public async createMessage(content: string): Promise<void> {
     if (this.messageId) return this.updateMessage(content)
 
-    await this.octokit.issues.createComment({
+    await this.octokit.rest.issues.createComment({
       owner: this.owner,
       repo: this.repo,
       issue_number: this.prNumber,
@@ -56,7 +55,7 @@ class GitHubClient {
   public async deleteMessage(): Promise<void> {
     if (!this.messageId) return
 
-    await this.octokit.issues.deleteComment({
+    await this.octokit.rest.issues.deleteComment({
       owner: this.owner,
       repo: this.repo,
       comment_id: this.messageId
@@ -69,13 +68,12 @@ class GitHubClient {
    * Returns the ref of the base branch for the current pull request
    */
   public async getBaseBranch(): Promise<string> {
-    if (!this.baseBranch) {
-      const {data} = await this.octokit.pulls.get({
+    if (this.baseBranch === '') {
+      const {data} = await this.octokit.rest.pulls.get({
         pull_number: this.prNumber,
         owner: this.owner,
         repo: this.repo
       })
-
       this.baseBranch = data.base.ref
     }
 
@@ -90,7 +88,7 @@ class GitHubClient {
    */
   public async getPackage(file: string, baseBranch: string): Promise<Package> {
     try {
-      const {data: fileInfo} = await this.octokit.repos.getContents({
+      const {data: fileInfo} = await this.octokit.rest.repos.getContents({
         owner: this.owner,
         path: file,
         ref: baseBranch,
@@ -126,13 +124,13 @@ class GitHubClient {
    */
   public async fetchMessage(): Promise<number | undefined> {
     if (this.messageId === undefined) {
-      const {data} = await this.octokit.issues.listComments({
+      const {data} = await this.octokit.rest.issues.listComments({
         owner: this.owner,
         repo: this.repo,
         issue_number: this.prNumber
       })
 
-      const actionMessages = data.filter(message =>
+      const actionMessages = data.filter((message: any) =>
         message.body.includes(COMMENT_IDENTIFIER)
       )
 
@@ -146,13 +144,13 @@ class GitHubClient {
    * List files in the current pull request
    */
   public async listFiles(): Promise<string[]> {
-    const {data} = await this.octokit.pulls.listFiles({
+    const {data} = await this.octokit.rest.pulls.listFiles({
       owner: this.owner,
       repo: this.repo,
       pull_number: this.prNumber
     })
 
-    return data.map(file => file.filename)
+    return data.map((file: any) => file.filename)
   }
 
   /**
@@ -181,7 +179,7 @@ class GitHubClient {
   public async updateMessage(content: string): Promise<void> {
     if (!this.messageId) return this.createMessage(content)
 
-    await this.octokit.issues.updateComment({
+    await this.octokit.rest.issues.updateComment({
       owner: this.owner,
       repo: this.repo,
       comment_id: this.messageId,

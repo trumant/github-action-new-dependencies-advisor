@@ -23,13 +23,12 @@ async function draftMessage(
   const advisorScorePicture: advisorScorePictures = {}
   for (const dependency of listDependencies) {
     try {
-      info[dependency] = await packageJson(dependency, {fullMetadata: true})
+      info[dependency] = await packageJson(dependency, {fullMetadata: true, allVersions: true})
       advisorScorePicture[dependency] = await getAdvisorPackageScore(dependency)
     } catch (error) {
       debug(`Package not found: ${dependency}`)
     }
   }
-
   const messageInfo = (dep: string): string =>
     `
 ### ${
@@ -49,20 +48,8 @@ async function draftMessage(
       : ``
   }
   ${
-    info[dep].author?.name
-      ? `<tr><td>Author</td><td>${info[dep].author?.name}</td></tr>`
-      : ``
-  }
-  ${
     info[dep].license
       ? `<tr><td>License</td><td>${info[dep].license}</td></tr>`
-      : ``
-  }
-  ${
-    info[dep].contributors
-      ? `<tr><td>Contributors</td><td>${info[dep].contributors
-          ?.map(contributor => contributor.name)
-          .join(', ')}</td></tr>`
       : ``
   }
   ${
