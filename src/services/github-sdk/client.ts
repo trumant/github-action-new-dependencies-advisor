@@ -186,7 +186,8 @@ class GitHubClient {
    */
   public static getClient(): GitHubClient {
     if (!this.hydratedInstance) this.hydratedInstance = new GitHubClient()
-  
+    console.log(this.hydratedInstance);
+    
     return this.hydratedInstance
   }
 }
