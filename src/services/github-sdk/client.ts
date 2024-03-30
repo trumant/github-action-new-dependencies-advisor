@@ -16,9 +16,7 @@ class GitHubClient {
   private octokit: any
   /** Hydrated id of the message created by this action */
   private messageId?: number | false
-  /** Hydrated instance of this client */
-  private static hydratedInstance?: GitHubClient = undefined
-
+  
   constructor() {
     /** Hydrates the Octokit client with the provided token */
     this.octokit = getOctokit(getInput('token'))
@@ -185,10 +183,8 @@ class GitHubClient {
   /**
    * Returns an hydrated instance of the GitHubClient, and creates it if not existing
    */
-  public static getClient(): GitHubClient {
-    if (!this.hydratedInstance) this.hydratedInstance = new GitHubClient()
-
-    return this.hydratedInstance
+  public static getClient(): any {
+    return new GitHubClient()
   }
 }
 

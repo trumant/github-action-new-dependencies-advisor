@@ -12,7 +12,7 @@ async function getPackageFiles(): Promise<string[]> {
   const files = await ghClient.listFiles()
 
   // returns the filtered list of package files
-  return files.filter(file => file.includes(PACKAGE_FILE_NAME))
+  return files.filter((file: any) => file.includes(PACKAGE_FILE_NAME))
 }
 
 export default getPackageFiles
