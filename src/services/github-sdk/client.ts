@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/explicit-member-accessibility */
 import {getInput} from '@actions/core'
-import {context, getOctokit} from '@actions/github'
+import {context, getOctokit, Octokit} from '@actions/github'
 import _ from 'underscore'
 import {Package} from '../../types/package'
 import {COMMENT_IDENTIFIER} from '../../config/comment'
@@ -13,10 +13,11 @@ class GitHubClient {
   /** Repository to target when using this API */
   public readonly repo: string
   /** Hydrated Octokit client */
-  private octokit: any
+  private octokit: Octokit
   /** Hydrated id of the message created by this action */
   private messageId?: number | false
-  
+  /** Hydrated instance of this client */
+  private static hydratedInstance?: GitHubClient = undefined
   constructor() {
     /** Hydrates the Octokit client with the provided token */
     this.octokit = getOctokit(getInput('token'))
@@ -183,8 +184,9 @@ class GitHubClient {
   /**
    * Returns an hydrated instance of the GitHubClient, and creates it if not existing
    */
-  public static getClient(): any {
-    return new GitHubClient()
+  public static getClient(): GitHubClient {
+    if (!this.hydratedInstance) this.hydratedInstance = new GitHubClient()
+    return this.hydratedInstance
   }
 }
 
