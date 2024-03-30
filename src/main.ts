@@ -16,8 +16,10 @@ async function run(): Promise<void> {
 
     // manage the publication of a message listing the new dependencies if needed
     await manageMessage(newDependencies)
-  } catch (error) {
-    core.setFailed(error.message)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      core.setFailed(error.message)
+    }
   }
 }
 

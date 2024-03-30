@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/explicit-member-accessibility */
 import {getInput} from '@actions/core'
-import {GitHub, context} from '@actions/github'
+import {context, getOctokit} from '@actions/github'
 import _ from 'underscore'
 import {Package} from '../../types/package'
 import {COMMENT_IDENTIFIER} from '../../config/comment'
@@ -13,9 +13,7 @@ class GitHubClient {
   /** Repository to target when using this API */
   public readonly repo: string
   /** Hydrated Octokit client */
-  private octokit: GitHub
-  /** Hydrated base branch */
-  private baseBranch?: string
+  private octokit: any
   /** Hydrated id of the message created by this action */
   private messageId?: number | false
   /** Hydrated instance of this client */
@@ -23,7 +21,7 @@ class GitHubClient {
 
   constructor() {
     /** Hydrates the Octokit client with the provided token */
-    this.octokit = new GitHub(getInput('token'))
+    this.octokit = getOctokit(getInput('token'))
 
     /** Initializes the context information */
     const {number} = context.issue
@@ -69,17 +67,12 @@ class GitHubClient {
    * Returns the ref of the base branch for the current pull request
    */
   public async getBaseBranch(): Promise<string> {
-    if (!this.baseBranch) {
-      const {data} = await this.octokit.pulls.get({
-        pull_number: this.prNumber,
-        owner: this.owner,
-        repo: this.repo
-      })
-
-      this.baseBranch = data.base.ref
-    }
-
-    return this.baseBranch
+    const {data} = await this.octokit.pulls.get({
+      pull_number: this.prNumber,
+      owner: this.owner,
+      repo: this.repo
+    })
+    return data.base.ref
   }
 
   /**
@@ -132,7 +125,7 @@ class GitHubClient {
         issue_number: this.prNumber
       })
 
-      const actionMessages = data.filter(message =>
+      const actionMessages = data.filter((message: any) =>
         message.body.includes(COMMENT_IDENTIFIER)
       )
 
@@ -152,7 +145,7 @@ class GitHubClient {
       pull_number: this.prNumber
     })
 
-    return data.map(file => file.filename)
+    return data.map((file: any) => file.filename)
   }
 
   /**
